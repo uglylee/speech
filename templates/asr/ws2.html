@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta name="apple-mobile-web-capable" content="yes">
+        <title>录音并传递给后台</title>
+    </head>
+    <body>
+        <div>
+            <span id="content"></span>
+        </div>
+        <button id="intercomBegin">开始对讲</button>
+        <button id="intercomEnd">关闭对讲</button>
+    </body>
+    <script type="text/javascript" src="{% static 'demo/js/speech.js' %}">
+    </script>
+</html>

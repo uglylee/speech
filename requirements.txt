@@ -1,0 +1,4 @@
+baidu_acu_asr
+django-redis
+dwebsocket==0.5.12
+django
