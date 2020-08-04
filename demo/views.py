@@ -53,45 +53,36 @@ def asrPage(request):
 def test_websocket(request):
     with open(save_file, 'wb') as f:
         if request.is_websocket():  # 如果请求是websocket请求：
-            header_adder_interceptor = header_manipulator_client_interceptor.header_adder_interceptor(
-                'audio_meta', base64.b64encode(client.request.SerializeToString()))
-            with grpc.insecure_channel(host) as channel:
-                for message in request.websocket:
-                    try:
-                        if message =="start".encode():
-                            java_cache["test"] = bytes()
-                            continue
-                        b = java_cache.get("test")
-                        java_cache["test"] = b + message
-                        if save_radio and message != "start".encode():
-                            f.write(message)
-                    except Exception as e:
-                        logging.error("error:",e)
+            for message in request.websocket:
+                try:
+                    if message =="start".encode():
+                        java_cache["test"] = bytes()
+                        continue
+                    b = java_cache.get("test")
+                    java_cache["test"] = b + message
+                    if save_radio and message != "start".encode():
+                        f.write(message)
+                except Exception as e:
+                    logging.error("error:",e)
 
 ## 获得结果的入口
 @accept_websocket
 def get_result(request):
-    start = True
-    while True:
-        if start:
-
-            responses = test_java_cache()
-            try:
-                for response in responses:
-                    if response.type == baidu_acu_asr.audio_streaming_pb2.FRAGMENT_DATA:
-                        request.websocket.send(response.audio_fragment.result.encode())
-                        logging.info("%s\t%s\t%s\t%s",
-                                     response.audio_fragment.start_time,
-                                     response.audio_fragment.end_time,
-                                     response.audio_fragment.result,
-                                     response.audio_fragment.serial_num)
-                    else:
-                        logging.warning("type is: %d", response.type)
-                start =False
-            except Exception as e:
-                # 如果出现异常，此处需要重试当前音频
-                logging.error("error",e)
-                time.sleep(0.5)
+    responses = test_java_cache()
+    try:
+        for response in responses:
+            if response.type == baidu_acu_asr.audio_streaming_pb2.FRAGMENT_DATA:
+                request.websocket.send(response.audio_fragment.result.encode())
+                logging.info("%s\t%s\t%s\t%s",
+                             response.audio_fragment.start_time,
+                             response.audio_fragment.end_time,
+                             response.audio_fragment.result,
+                             response.audio_fragment.serial_num)
+            else:
+                logging.warning("type is: %d", response.type)
+    except Exception as e:
+        logging.error("error",e)
+        time.sleep(0.5)
 ## java_cache
 def test_java_cache():
     header_adder_interceptor = header_manipulator_client_interceptor.header_adder_interceptor(
@@ -102,10 +93,6 @@ def test_java_cache():
         stub = audio_streaming_pb2_grpc.AsrServiceStub(intercept_channel)
         ### 获得文件16k_test.pcm的结果,AsrProduct.INPUT_METHOD
         #### responses = stub.send(client.generate_file_stream("16k_test.pcm"), timeout=100000)
-        ### 获得文件10s.wav的结果,AsrProduct.CUSTOM_SERVICE
-        #### responses = stub.send(client.generate_file_stream("10s.wav"), timeout=100000)
-        ### 获得文件test.pcm的结果,AsrProduct.INPUT_METHOD
-        #### responses = stub.send(client.generate_file_stream("test.pcm"), timeout=100000)
         ### 从cache去获得流
         responses = stub.send(make_stream_from_java_cache(), timeout=100000)
         for response in responses:
@@ -120,9 +107,7 @@ def make_stream_from_java_cache():
         if len(res) >=read_bytes_len:
             i +=1
             yield audio_streaming_pb2.AudioFragmentRequest(audio_data=res)
-            res = java_cache.get("test")[i*u:u*(i+1)]
-        else:
-            res = java_cache.get("test")[i * u:u * (i + 1)]
+        res = java_cache.get("test")[i*u:u*(i+1)]
         time.sleep(read_cache_sleep_time)
 
 #

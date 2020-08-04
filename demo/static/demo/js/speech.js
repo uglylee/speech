@@ -3,6 +3,7 @@ var end = document.getElementById('intercomEnd');
 
 var ws = null; //实现WebSocket
 var record = null; //多媒体对象，用来处理音频
+var ws1 = null;
 
 function init(rec) {
     record = rec;
@@ -211,5 +212,8 @@ end.onclick = function() {
         ws.close();
         record.stop();
         console.log('关闭对讲以及WebSocket');
+    }
+    if(ws1) {
+        ws1.close();
     }
 }
