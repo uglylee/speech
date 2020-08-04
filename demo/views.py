@@ -91,7 +91,7 @@ def get_result(request):
 def test_local_cache():
     """
     从百度语音流获得结果
-    :param params: make_stream_from_java_cache()
+    :param params: make_stream_from_local_cache()
     :return:
     """
     header_adder_interceptor = header_manipulator_client_interceptor.header_adder_interceptor(
@@ -100,13 +100,13 @@ def test_local_cache():
         intercept_channel = grpc.intercept_channel(channel,
                                                    header_adder_interceptor)
         stub = audio_streaming_pb2_grpc.AsrServiceStub(intercept_channel)
-        responses = stub.send(make_stream_from_java_cache(), timeout=100000)
+        responses = stub.send(make_stream_from_local_cache(), timeout=100000)
         for response in responses:
             yield response
 
-def make_stream_from_java_cache():
+def make_stream_from_local_cache():
     """
-    从cache持续生成百度request
+    从本地cache持续生成百度request
     :param params:
     :return:
     """
@@ -174,7 +174,7 @@ def make_stream_from_java_cache():
 # def test_redis_cache():
 #     """
 #     从百度语音流获得结果
-#     :param params: make_stream_from_java_cache()
+#     :param params: make_stream_from_redis_cache()
 #     :return:
 #     """
 #     header_adder_interceptor = header_manipulator_client_interceptor.header_adder_interceptor(
