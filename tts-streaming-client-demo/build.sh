@@ -1,0 +1,2 @@
+~/.jumbo/opt/jdk1.8.0/bin/javac -cp . com/baidu/speech/jserverttssdk/JBDSpeechTTSSDK.java com/baidu/speech/jserverttssdk/JBDSpeechTTSCallback.java com/baidu/speech/jserverttssdk/JBDSpeechTTSSDKDemo.java
+/opt/compiler/gcc-4.8.2/bin/g++  -I ~/.jumbo/opt/jdk1.8.0/include -I ~/.jumbo/opt/jdk1.8.0/include/linux -I../ -fPIC -shared -o libSpeechTTSJni.so tts_api_jni.cpp -I ../src/api/ -L ./ -lserver-tts 
