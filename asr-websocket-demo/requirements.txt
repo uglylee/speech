@@ -1,4 +1,4 @@
 baidu_acu_asr==2.0.3
 django-redis==4.10.0
 dwebsocket==0.5.12
-django==2.1.4
+django==2.2.13
