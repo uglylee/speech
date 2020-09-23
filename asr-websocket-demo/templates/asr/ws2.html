@@ -9,11 +9,31 @@
         <title>录音并传递给后台</title>
     </head>
     <body>
+
+
+        url:<input id="url" placeholder="10.153.205.21" value="10.153.205.21">
+        port:<input id="port" placeholder="8051" value="8051">
+        user_name:<input id="user_name" placeholder="admin" value="admin">
+        password:<input id="password" placeholder="1234567890" value="1234567890">
+        product_id:<input id="product_id" placeholder="1903" value="1903">
+        save_radio:<input id="save_radio" placeholder="true" value="true">
+        save_result:<input id="save_file" placeholder="false" value="false">
+
+        send_per_seconds:<input id="send_per_seconds" placeholder="0.02" value="0.02">
+        sleep_ratio:<input id="sleep_ratio" placeholder="0.7" value="0.7">
+        enable_chunk:<input id="enable_chunk" placeholder="true" value="true">
+        <input id="enable_flush_data" placeholder="true" value="true" style="display:none">
+        sample_rate:<input id="sample_rate" placeholder="8000" value="8000">
+        read_bytes_len:<input id="read_bytes_len" placeholder="3000" value="3000">
+        read_cache_sleep_time:<input id="read_cache_sleep_time" placeholder="0.01" value="0.01">
+
+        <br>
+        <button id="intercomBegin">开始对讲</button>
+        <button id="intercomEnd">关闭对讲</button>
         <div>
             <span id="content"></span>
         </div>
-        <button id="intercomBegin">开始对讲</button>
-        <button id="intercomEnd">关闭对讲</button>
+
     </body>
     <script type="text/javascript" src="{% static 'demo/js/speech.js' %}">
     </script>

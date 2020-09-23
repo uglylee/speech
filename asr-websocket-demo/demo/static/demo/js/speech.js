@@ -4,7 +4,23 @@ var end = document.getElementById('intercomEnd');
 var ws = null; //实现WebSocket
 var record = null; //多媒体对象，用来处理音频
 var ws1 = null;
+var id=null;
+        //
+var timestamp=null;
 
+var url = null;
+var port = null;
+var user_name = null;
+var password = null;
+var save_radio = null;
+var save_file = null;
+var send_per_seconds = null;
+var sleep_ratio = null;
+var enable_chunk = null;
+var enable_flush_data = null;
+var sample_rate = null;
+var read_bytes_len = null;
+var read_cache_sleep_time =null;
 function init(rec) {
     record = rec;
 }
@@ -120,11 +136,52 @@ var Recorder = function(stream) {
         sendData();
     }
 }
+  function guid() {
+        return Number(Math.random().toString().substr(3, 3) + Date.now()).toString(36);
+    }
+function getAudioInfo(){
+
+    url = document.getElementById("url").value;
+    port = document.getElementById("port").value;
+    user_name = document.getElementById("user_name").value;
+    password = document.getElementById("password").value;
+    product_id = document.getElementById("product_id").value;
+    save_radio = document.getElementById("save_radio").value;
+    save_file = document.getElementById("save_file").value;
+    send_per_seconds = document.getElementById("send_per_seconds").value;
+    sleep_ratio = document.getElementById("sleep_ratio").value;
+    enable_chunk = document.getElementById("enable_chunk").value;
+    enable_flush_data = document.getElementById("enable_flush_data").value;
+    sample_rate = document.getElementById("sample_rate").value;
+    read_bytes_len = document.getElementById("read_bytes_len").value;
+    read_cache_sleep_time = document.getElementById("read_cache_sleep_time").value;
+    var dic = {};
+    dic["id"] = id;
+    dic["url"] = url;
+    dic["port"] = port;
+    dic["user_name"] = user_name;
+    dic["password"] = password;
+    dic["product_id"] = product_id;
+    dic["save_radio"] = save_radio;
+    dic["save_file"] = save_file;
+    dic["send_per_seconds"] = send_per_seconds;
+    dic["sleep_ratio"] = sleep_ratio;
+    dic["enable_chunk"] = enable_chunk;
+    dic["enable_flush_data"] = enable_flush_data;
+    dic["sample_rate"] = sample_rate;
+    dic["read_bytes_len"] = read_bytes_len;
+    dic["read_cache_sleep_time"] = read_cache_sleep_time;
+    dic["timestamp"] = timestamp;
+    console.log(timestamp)
+    return JSON.stringify(dic);
+
+}
 
 /*
 * WebSocket
 */
 function useWebSocket() {
+
     ws = new WebSocket("ws://localhost:8000/demo/test_websocket");
     ws.binaryType = 'arraybuffer'; //传输的是 ArrayBuffer 类型的数据
     ws.onopen = function() {
@@ -132,32 +189,42 @@ function useWebSocket() {
         if (ws.readyState == 1) { //ws进入连接状态，则每隔500毫秒发送一包数据
             record.start();
         }
-        ws.send("start")
+        id = guid()
+        console.log(id)
+        timestamp=new Date().getTime().toString();
+        // alert(typeof(timestamp))
+
+        ws.send("start*"+getAudioInfo()+"");
         getWebSocketResult()
     };
 
     ws.onmessage = function(msg) {
         console.info(msg)
-    }
+    };
 
     ws.onerror = function(err) {
         console.info(err)
     }
 }
 
+
 function getWebSocketResult() {
     ws1 = new WebSocket("ws://localhost:8000/demo/asr/getResult");
     ws1.binaryType = 'arraybuffer'; //传输的是 ArrayBuffer 类型的数据
     ws1.onopen = function() {
         console.log('握手成功1');
+        console.log(id)
+
+        ws1.send(getAudioInfo());
     };
 
     ws1.onmessage = function(msg) {
-        console.info(msg.data)
-        var content = document.getElementById("content")
-        content.innerHTML += msg.data+"<br>"
+        console.info(msg.data);
+        var content = document.getElementById("content");
+        // content.innerHTML += msg.data + "<br>"
+        content.innerHTML =  msg.data  +"<br>"  + content.innerHTML+"<br>"
 
-    }
+    };
 
     ws1.onerror = function(err) {
         console.info(err)

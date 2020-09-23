@@ -1,4 +1,4 @@
-baidu_acu_asr
-django-redis
+baidu_acu_asr==2.0.3
+django-redis==4.10.0
 dwebsocket==0.5.12
-django
+django==2.1.4

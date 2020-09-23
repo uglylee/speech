@@ -137,3 +137,23 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+
+
+URL = "10.153.205.21"
+PORT = "8051"
+USER_NAME = "admin"
+PASSWORD = "1234567890"
+SAVE_RADIO = True
+SAVE_FILE = "test.pcm"
+LOG_LEVEL = 0
+SEND_PER_SECONDS = 0.02
+SLEEP_RATIO = 0.7
+ENABLE_TRUNK = True
+ENABLE_FLUSH_DATA = True
+SAMPLE_RATE = 8000
+READ_BYTES_LEN = 3000
+READ_CACHE_SLEEP_TIME = 0.01
+PRODUCT_ID = "1903"
+
