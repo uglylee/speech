@@ -1,0 +1,38 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /monitor
+
+socket:
+  retry_time: 5
+  connect_timeout: 2000
+asr:
+  retry_time: 5
+  mrcp: 10.153.205.20:8060
+  streaming:
+    host: 10.153.205.20
+    port: 8051
+  engine: 10.61.217.37:8001
+  audio_file: 10s.wav
+  audio_res: 所以会有另外一个专家他们就会这样说好了这次这个波段我吵下一个让给你知道吧然后你到时候我卖的时候你帮我接键盘是不是
+
+tts:
+  retry_time: 5
+  mrcp: 10.136.238.22:8061
+  engine: 10.136.238.22:8013
+  request: http://14.215.177.147:80/text2audio?lan=zh&cuid=XXX&ctp=1&pdt=993&per=5117&spd=5&pit=5&tex=服务探活的文字
+  read_timeout: 5000
+  connect_timeout: 5000
+#  2个字1200左右
+  text_length: 2000
+
+logging:
+  level:
+    root: INFO
+    org:
+      springframework:
+        web=DEBUG:
+  file:
+    name: logs/monitor.log
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS
