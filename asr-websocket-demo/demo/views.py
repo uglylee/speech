@@ -100,6 +100,7 @@ def test_websocket(request):
                     pcm_file.write(message)
             except Exception as e:
                 logging.error("error: " + str(e))
+                pcm_file.close()
 
         pcm_file.close()
 
@@ -111,7 +112,6 @@ def get_result(request):
     :return:
     """
     info = None
-    result_file = None
     if request.is_websocket():
         for message in request.websocket:
             info = json.loads(message.decode())
@@ -130,18 +130,16 @@ def get_result(request):
                              response.audio_fragment.serial_num)
                 if getBoolean(info.get("save_file")):
                     result_file_name = "res/" + info["id"] + "_" + info["timestamp"] + ".txt"
-                    result_file = open(result_file_name, "a+")
-                    result_file.write(response.audio_fragment.result + "\n")
+                    with open(result_file_name, "a+") as result_file:
+
+                        result_file.write(response.audio_fragment.result + "\n")
             else:
                 logging.warning("type is: %d", response.type)
 
     except Exception as e:
         logging.error("error",e)
         time.sleep(0.5)
-        if result_file:
-            result_file.close()
-    if result_file:
-        result_file.close()
+
 
 def test_local_cache(info):
     """
